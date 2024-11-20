@@ -1,11 +1,11 @@
 package pug
 
-import "io/ioutil"
+import "os"
 
 //go:generate stringer -type=itemType,NodeType -trimprefix=item -output=config_string.go
 
 var TabSize = 4
-var ReadFunc = ioutil.ReadFile
+var ReadFunc = os.ReadFile
 
 var (
 	golang_mode  = false

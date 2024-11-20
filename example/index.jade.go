@@ -4,8 +4,6 @@ package main
 
 import (
 	"io"
-
-	"github.com/Joker/hpp"
 )
 
 const (
@@ -26,9 +24,8 @@ const (
 
 func Index(pageTitle string, youAreUsingpug bool, wr io.Writer) {
 
-	r, w := io.Pipe()
 	go func() {
-		buffer := &WriterAsBuffer{w}
+		buffer := &WriterAsBuffer{wr}
 
 		buffer.WriteString(index__0)
 		WriteEscString(pageTitle, buffer)
@@ -54,8 +51,5 @@ func Index(pageTitle string, youAreUsingpug bool, wr io.Writer) {
 
 		}
 		buffer.WriteString(index__3)
-
-		w.Close()
 	}()
-	hpp.Format(r, wr)
 }

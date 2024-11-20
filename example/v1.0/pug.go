@@ -2,14 +2,19 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
+	"os"
 
-	"github.com/Joker/hpp"
 	"github.com/shaban/pug"
 )
 
 func main() {
-	dat, err := ioutil.ReadFile("template.pug")
+	f, err := os.Open("template.pug")
+	if err != nil {
+		fmt.Printf("Open File error: %v", err)
+		return
+	}
+	dat, err := io.ReadAll(f)
 	if err != nil {
 		fmt.Printf("ReadFile error: %v", err)
 		return
@@ -21,5 +26,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("\nOutput:\n\n%s", hpp.PrPrint(tmpl))
+	fmt.Printf("\nOutput:\n\n%s", tmpl)
 }

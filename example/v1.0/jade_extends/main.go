@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Joker/hpp"
 	"github.com/shaban/pug"
 )
 
@@ -14,7 +13,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("\nParseFile error: %v", err)
 	}
-	log.Printf("%s\n\n", hpp.PrPrint(index))
+	log.Printf("%s\n\n", index)
 
 	//
 

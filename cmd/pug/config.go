@@ -130,27 +130,6 @@ func newLayout(constName string) layout {
 		tpl.Bbuf = "buffer *pool.ByteBuffer"
 	}
 
-	if format {
-		tpl.Before = `
-			r, w := io.Pipe()
-			go func() {
-				buffer := &WriterAsBuffer{w}`
-
-		if writer {
-			tpl.After = `
-				w.Close()
-			}()
-			`
-		} else {
-			tpl.After = `
-				w.Close()
-			}()
-			`
-		}
-	}
-
-	//
-
 	goFilter := pug.UseGoFilter()
 
 	if goFilter.Name != "" {

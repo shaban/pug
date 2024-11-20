@@ -1,7 +1,7 @@
 package pug
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -500,5 +500,5 @@ func readFile(fname string, fs http.FileSystem) ([]byte, error) {
 	}
 	defer file.Close()
 
-	return ioutil.ReadAll(file)
+	return io.ReadAll(file)
 }

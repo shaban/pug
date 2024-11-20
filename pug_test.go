@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,7 +26,7 @@ func TestStrFilter(t *testing.T) {
 
 func examination(test func(fpath string, dat []byte) (string, error), ext, path string, t *testing.T) {
 	os.Chdir(path)
-	files, err := ioutil.ReadDir(path)
+	files, err := os.ReadDir(path)
 	if err != nil {
 		fmt.Printf("--- FAIL: ReadDir error: %v\n\n", err)
 		t.Fail()
@@ -42,7 +41,7 @@ func examination(test func(fpath string, dat []byte) (string, error), ext, path 
 			continue
 		}
 
-		dat, err := ioutil.ReadFile(path + name)
+		dat, err := os.ReadFile(path + name)
 		if err != nil {
 			fmt.Println("_________" + name)
 			fmt.Printf("--- FAIL: ReadFile error: %v\n\n", err)
@@ -65,7 +64,7 @@ func examination(test func(fpath string, dat []byte) (string, error), ext, path 
 		if err != nil {
 
 			// make files
-			ioutil.WriteFile(path+strings.TrimSuffix(name, fext)+ext, []byte(tpl), 0644)
+			os.WriteFile(path+strings.TrimSuffix(name, fext)+ext, []byte(tpl), 0644)
 
 			fmt.Println("```", tpl, "\n\n```")
 			continue

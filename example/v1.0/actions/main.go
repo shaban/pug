@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Joker/hpp"
 	"github.com/shaban/pug"
 )
 
@@ -34,9 +33,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("\nParse error: %v", err)
 		return
 	}
-	fmt.Printf("%s", hpp.PrPrint(pugTpl))
-
-	//
+	fmt.Printf("%s", pugTpl)
 
 	job1 := Job{Employer: "Monash B", Role: "Honorary"}
 	job2 := Job{Employer: "Box Hill", Role: "Head of HE"}

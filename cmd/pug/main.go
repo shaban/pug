@@ -8,7 +8,6 @@ import (
 	"go/parser"
 	"go/printer"
 	"go/token"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -30,7 +29,7 @@ var (
 	stdbuf   bool
 	writer   bool
 	inline   bool
-	format   bool
+	//format   bool
 	ns_files = map[string]bool{}
 )
 
@@ -43,7 +42,7 @@ func init() {
 	flag.StringVar(&basedir, "basedir", "./", `base directory for templates`)
 	flag.StringVar(&pkg_name, "pkg", "pug", `package name for generated files`)
 	flag.StringVar(&prepend, "prepend", "", `prepend to generated files e.g for build tags`)
-	flag.BoolVar(&format, "fmt", false, `HTML pretty print output for generated functions`)
+	//flag.BoolVar(&format, "fmt", false, `HTML pretty print output for generated functions`)
 	flag.BoolVar(&inline, "inline", false, `inline HTML in generated functions`)
 	flag.BoolVar(&stdlib, "stdlib", false, `use stdlib functions`)
 	flag.BoolVar(&stdbuf, "stdbuf", false, `use bytes.Buffer  [default bytebufferpool.ByteBuffer]`)
@@ -104,7 +103,7 @@ func genFile(path, outdir string) {
 		ns_files[fname] = true
 	}
 
-	fl, err := ioutil.ReadFile(fname)
+	fl, err := os.ReadFile(fname)
 	if err != nil {
 		log.Fatalln("cmd/pug: ReadFile(): ", err)
 	}
@@ -136,7 +135,7 @@ func genFile(path, outdir string) {
 		// TODO
 		bb.WriteString("\n\nERROR: parseGoSrc(): ")
 		bb.WriteString(err.Error())
-		ioutil.WriteFile(outPath+"__Error.go", bb.Bytes(), 0644)
+		os.WriteFile(outPath+"__Error.go", bb.Bytes(), 0644)
 		log.Fatalln("cmd/pug: parseGoSrc(): ", err)
 	}
 
@@ -149,7 +148,7 @@ func genFile(path, outdir string) {
 
 	//
 
-	err = ioutil.WriteFile(outPath+".go", fmtOut, 0644)
+	err = os.WriteFile(outPath+".go", fmtOut, 0644)
 	if err != nil {
 		log.Fatalln("cmd/pug: WriteFile(): ", err)
 	}
