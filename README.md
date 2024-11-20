@@ -214,22 +214,22 @@ When pug used as library :go filter is not needed.
 [^1]:
     `Usage: ./pug [OPTION]... [FILE]...`  
     ```
-    -basedir string
-            base directory for templates (default "./")
-    -d string
-            directory for generated .go files (default "./")
-    -fmt
-            HTML pretty print output for generated functions
-    -inline
-            inline HTML in generated functions
-    -pkg string
-            package name for generated files (default "pug")
-    -stdbuf
-            use bytes.Buffer  [default bytebufferpool.ByteBuffer]
-    -stdlib
-            use stdlib functions
-    -writer
-            use io.Writer for output
+  -basedir string
+        base directory for templates (default "./")
+  -d string
+        directory for generated .go files (default "./")
+  -inline
+        inline HTML in generated functions
+  -pkg string
+        package name for generated files (default "pug")
+  -prepend string
+        prepend to generated files e.g for build tags
+  -stdbuf
+        use bytes.Buffer  [default bytebufferpool.ByteBuffer]
+  -stdlib
+        use stdlib functions
+  -writer
+        use io.Writer for output
     ```
 [^2]:
     Runtime `html/template` generation doesn't support the following features:  
