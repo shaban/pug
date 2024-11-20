@@ -77,7 +77,7 @@ func goImports(absPath string, src []byte) []byte {
 
 //
 
-func genFile(path, outdir, pkg_name string) {
+func genFile(path, outdir string) {
 	log.Printf("\nfile: %q\n", path)
 
 	var (
@@ -154,14 +154,14 @@ func genFile(path, outdir, pkg_name string) {
 	fmt.Printf("generated: %s.go  done.\n\n", outPath)
 }
 
-func genDir(dir, outdir, pkg_name string) {
+func genDir(dir, outdir string) {
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return fmt.Errorf("prevent panic by handling failure accessing a path %q: %v\n", dir, err)
+			return fmt.Errorf("\nprevent panic by handling failure accessing path %q: %v", dir, err)
 		}
 
 		if ext := filepath.Ext(info.Name()); ext == ".jade" || ext == ".pug" {
-			genFile(path, outdir, pkg_name)
+			genFile(path, outdir)
 		}
 		return nil
 	})
@@ -200,9 +200,9 @@ func main() {
 
 		absPath, _ := filepath.Abs(jadePath)
 		if stat.IsDir() {
-			genDir(absPath, outdir, pkg_name)
+			genDir(absPath, outdir)
 		} else {
-			genFile(absPath, outdir, pkg_name)
+			genFile(absPath, outdir)
 		}
 		if !stdlib {
 			makeJfile(stdbuf)

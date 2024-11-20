@@ -158,11 +158,10 @@ func WriteBool(b bool, buffer {{.Buf}}) {
 
 func makeJfile(std bool) {
 	wr, err := os.Create(outdir + "/jade.go")
-	defer wr.Close()
 	if err != nil {
 		log.Fatalln("cmd/jade: makeJfile(): ", err)
 	}
-
+	defer wr.Close()
 	tp := template.Must(template.New("jlayout").Parse(jade_go))
 
 	if writer {
