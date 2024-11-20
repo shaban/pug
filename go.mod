@@ -1,4 +1,4 @@
-module github.com/Joker/jade
+module github.com/shaban/pug
 
 go 1.14
 

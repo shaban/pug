@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/Joker/hpp"
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 )
 
 type Person struct {
@@ -24,17 +24,17 @@ type Job struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 
-	buf, err := ioutil.ReadFile("template.jade")
+	buf, err := ioutil.ReadFile("template.pug")
 	if err != nil {
 		fmt.Printf("\nReadFile error: %v", err)
 		return
 	}
-	jadeTpl, err := jade.Parse("jade_tp", buf)
+	pugTpl, err := pug.Parse("pug_tp", buf)
 	if err != nil {
 		fmt.Printf("\nParse error: %v", err)
 		return
 	}
-	fmt.Printf("%s", hpp.PrPrint(jadeTpl))
+	fmt.Printf("%s", hpp.PrPrint(pugTpl))
 
 	//
 
@@ -50,7 +50,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	//
 
-	goTpl, err := template.New("html").Parse(jadeTpl)
+	goTpl, err := template.New("html").Parse(pugTpl)
 	if err != nil {
 		fmt.Printf("\nTemplate parse error: %v", err)
 		return

@@ -5,17 +5,17 @@ import (
 	"io/ioutil"
 
 	"github.com/Joker/hpp"
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 )
 
 func main() {
-	dat, err := ioutil.ReadFile("template.jade")
+	dat, err := ioutil.ReadFile("template.pug")
 	if err != nil {
 		fmt.Printf("ReadFile error: %v", err)
 		return
 	}
 
-	tmpl, err := jade.Parse("name_of_tpl", dat)
+	tmpl, err := pug.Parse("name_of_tpl", dat)
 	if err != nil {
 		fmt.Printf("Parse error: %v", err)
 		return

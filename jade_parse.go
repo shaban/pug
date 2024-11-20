@@ -1,4 +1,4 @@
-package jade
+package pug
 
 import (
 	"io/ioutil"

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 )
 
 var wdir string
@@ -35,7 +35,7 @@ func examination(test func(fpath string, dat []byte, fname string) ([]byte, erro
 		name = file.Name()
 		fext = filepath.Ext(name)
 
-		if fext != ".jade" && fext != ".pug" {
+		if fext != ".pug" {
 			continue
 		}
 
@@ -101,16 +101,16 @@ func examination(test func(fpath string, dat []byte, fname string) ([]byte, erro
 }
 
 func astTest(fpath string, text []byte, fname string) ([]byte, error) {
-	jade.Config(golang)
+	pug.Config(golang)
 
 	outPath := "test"
 	inline = true
 
 	//
 
-	jst, err := jade.New(fpath).Parse(text)
+	jst, err := pug.New(fpath).Parse(text)
 	if err != nil {
-		log.Fatalln("cmd/jade: jade.New(path).Parse(): ", err)
+		log.Fatalln("cmd/pug: pug.New(path).Parse(): ", err)
 	}
 
 	var (

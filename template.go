@@ -1,5 +1,5 @@
 // Jade.go - template engine. Package implements Jade-lang templates for generating Go html/template output.
-package jade
+package pug
 
 import (
 	"bytes"

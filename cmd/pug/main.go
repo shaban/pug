@@ -15,7 +15,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 	"golang.org/x/tools/imports"
 )
 
@@ -40,7 +40,7 @@ func use() {
 func init() {
 	flag.StringVar(&outdir, "d", "./", `directory for generated .go files`)
 	flag.StringVar(&basedir, "basedir", "./", `base directory for templates`)
-	flag.StringVar(&pkg_name, "pkg", "jade", `package name for generated files`)
+	flag.StringVar(&pkg_name, "pkg", "pug", `package name for generated files`)
 	flag.BoolVar(&format, "fmt", false, `HTML pretty print output for generated functions`)
 	flag.BoolVar(&inline, "inline", false, `inline HTML in generated functions`)
 	flag.BoolVar(&stdlib, "stdlib", false, `use stdlib functions`)
@@ -104,14 +104,14 @@ func genFile(path, outdir string) {
 
 	fl, err := ioutil.ReadFile(fname)
 	if err != nil {
-		log.Fatalln("cmd/jade: ReadFile(): ", err)
+		log.Fatalln("cmd/pug: ReadFile(): ", err)
 	}
 
 	//
 
-	jst, err := jade.New(path).Parse(fl)
+	jst, err := pug.New(path).Parse(fl)
 	if err != nil {
-		log.Fatalln("cmd/jade: jade.New(path).Parse(): ", err)
+		log.Fatalln("cmd/pug: pug.New(path).Parse(): ", err)
 	}
 
 	var (
@@ -135,7 +135,7 @@ func genFile(path, outdir string) {
 		bb.WriteString("\n\nERROR: parseGoSrc(): ")
 		bb.WriteString(err.Error())
 		ioutil.WriteFile(outPath+"__Error.go", bb.Bytes(), 0644)
-		log.Fatalln("cmd/jade: parseGoSrc(): ", err)
+		log.Fatalln("cmd/pug: parseGoSrc(): ", err)
 	}
 
 	gst.collapseWriteString(inline, constName)
@@ -149,7 +149,7 @@ func genFile(path, outdir string) {
 
 	err = ioutil.WriteFile(outPath+".go", fmtOut, 0644)
 	if err != nil {
-		log.Fatalln("cmd/jade: WriteFile(): ", err)
+		log.Fatalln("cmd/pug: WriteFile(): ", err)
 	}
 	fmt.Printf("generated: %s.go  done.\n\n", outPath)
 }
@@ -160,7 +160,7 @@ func genDir(dir, outdir string) {
 			return fmt.Errorf("\nprevent panic by handling failure accessing path %q: %v", dir, err)
 		}
 
-		if ext := filepath.Ext(info.Name()); ext == ".jade" || ext == ".pug" {
+		if ext := filepath.Ext(info.Name()); ext == ".pug" {
 			genFile(path, outdir)
 		}
 		return nil
@@ -180,7 +180,7 @@ func main() {
 		return
 	}
 
-	jade.Config(golang)
+	pug.Config(golang)
 
 	if _, err := os.Stat(outdir); os.IsNotExist(err) {
 		os.MkdirAll(outdir, 0755)
@@ -191,14 +191,14 @@ func main() {
 		os.Chdir(basedir)
 	}
 
-	for _, jadePath := range flag.Args() {
+	for _, pugPath := range flag.Args() {
 
-		stat, err := os.Stat(jadePath)
+		stat, err := os.Stat(pugPath)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		absPath, _ := filepath.Abs(jadePath)
+		absPath, _ := filepath.Abs(pugPath)
 		if stat.IsDir() {
 			genDir(absPath, outdir)
 		} else {

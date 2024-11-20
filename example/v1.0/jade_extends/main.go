@@ -6,11 +6,11 @@ import (
 	"net/http"
 
 	"github.com/Joker/hpp"
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	index, err := jade.ParseFile("index.jade")
+	index, err := pug.ParseFile("index.pug")
 	if err != nil {
 		log.Printf("\nParseFile error: %v", err)
 	}

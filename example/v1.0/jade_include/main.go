@@ -6,15 +6,15 @@ import (
 	"net/http"
 
 	"github.com/Joker/hpp"
-	"github.com/Joker/jade"
+	"github.com/shaban/pug"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	jade_tpl, err := jade.ParseFile("template.jade")
+	pug_tpl, err := pug.ParseFile("template.pug")
 	if err != nil {
 		log.Printf("\nParseFile error: %v", err)
 	}
-	log.Printf("%s\n\n", hpp.PrPrint(jade_tpl))
+	log.Printf("%s\n\n", hpp.PrPrint(pug_tpl))
 
 	//
 
@@ -26,7 +26,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	//
 
-	go_tpl, err := template.New("html").Funcs(funcMap).Parse(jade_tpl)
+	go_tpl, err := template.New("html").Funcs(funcMap).Parse(pug_tpl)
 	if err != nil {
 		log.Printf("\nTemplate parse error: %v", err)
 	}
