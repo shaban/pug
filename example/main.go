@@ -1,6 +1,6 @@
 package main
 
-//go:generate jade -pkg=main -writer -fmt index.jade
+//go:generate pug -pkg=main -writer -fmt index.pug
 
 import (
 	"net/http"
@@ -9,7 +9,7 @@ import (
 func main() {
 
 	http.HandleFunc("/", func(wr http.ResponseWriter, req *http.Request) {
-		Index("Jade.go", true, wr)
+		Index("pug.go", true, wr)
 	})
 
 	http.ListenAndServe(":8080", nil)

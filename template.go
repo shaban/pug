@@ -1,4 +1,4 @@
-// Jade.go - template engine. Package implements Jade-lang templates for generating Go html/template output.
+// pug.go - template engine. Package implements pug-lang templates for generating Go html/template output.
 package pug
 
 import (
@@ -19,14 +19,14 @@ Trivial usage:
 		"html/template"
 		"net/http"
 
-		"github.com/Joker/jade"
+		"github.com/shaban/pug"
 	)
 
 	func handler(w http.ResponseWriter, r *http.Request) {
-		jadeTpl, _ := jade.Parse("jade", []byte("doctype 5\n html: body: p Hello #{.Word}!"))
-		goTpl, _ := template.New("html").Parse(jadeTpl)
+		pugTpl, _ := pug.Parse("pug", []byte("doctype 5\n html: body: p Hello #{.Word}!"))
+		goTpl, _ := template.New("html").Parse(pugTpl)
 
-		goTpl.Execute(w, struct{ Word string }{"jade"})
+		goTpl.Execute(w, struct{ Word string }{"pug"})
 	}
 
 	func main() {
@@ -36,7 +36,7 @@ Trivial usage:
 
 Output:
 
-	<!DOCTYPE html><html><body><p>Hello jade!</p></body></html>
+	<!DOCTYPE html><html><body><p>Hello pug!</p></body></html>
 */
 func Parse(fname string, text []byte) (string, error) {
 	outTpl, err := New(fname).Parse(text)
@@ -48,7 +48,7 @@ func Parse(fname string, text []byte) (string, error) {
 	return bb.String(), nil
 }
 
-// ParseFile parse the jade template file in given filename
+// ParseFile parse the pug template file in given filename
 func ParseFile(fname string) (string, error) {
 	text, err := ReadFunc(fname)
 	if err != nil {

@@ -428,7 +428,7 @@ func (t *tree) parseBlock(tk item) *blockNode {
 
 func (t *tree) parseInclude(tk item) *listNode {
 	switch ext := filepath.Ext(tk.val); ext {
-	case ".jade", ".pug", "":
+	case ".pug", "":
 		return t.parseSubFile(tk.val)
 	case ".js", ".css", ".tpl", ".md":
 		ln := t.newList(tk.pos)
@@ -463,15 +463,15 @@ func (t *tree) read(path string) []byte {
 	if os.IsNotExist(err) {
 
 		if ext := filepath.Ext(path); ext == "" {
-			if _, er := os.Stat(path + ".jade"); os.IsNotExist(er) {
+			if _, er := os.Stat(path + ".pug"); os.IsNotExist(er) {
 				if _, er = os.Stat(path + ".pug"); os.IsNotExist(er) {
 					wd, _ := os.Getwd()
-					t.errorf("in '%s' subtemplate '%s': file path error: '.jade' or '.pug' file required", wd, path)
+					t.errorf("in '%s' subtemplate '%s': file path error: '.pug' or '.pug' file required", wd, path)
 				} else {
 					ext = ".pug"
 				}
 			} else {
-				ext = ".jade"
+				ext = ".pug"
 			}
 			bb, err = readFile(path+ext, t.fs)
 		}

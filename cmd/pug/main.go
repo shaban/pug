@@ -25,6 +25,7 @@ var (
 	outdir   string
 	basedir  string
 	pkg_name string
+	prepend  string
 	stdlib   bool
 	stdbuf   bool
 	writer   bool
@@ -41,6 +42,7 @@ func init() {
 	flag.StringVar(&outdir, "d", "./", `directory for generated .go files`)
 	flag.StringVar(&basedir, "basedir", "./", `base directory for templates`)
 	flag.StringVar(&pkg_name, "pkg", "pug", `package name for generated files`)
+	flag.StringVar(&prepend, "prepend", "", `prepend to generated files e.g for build tags`)
 	flag.BoolVar(&format, "fmt", false, `HTML pretty print output for generated functions`)
 	flag.BoolVar(&inline, "inline", false, `inline HTML in generated functions`)
 	flag.BoolVar(&stdlib, "stdlib", false, `use stdlib functions`)
@@ -205,7 +207,7 @@ func main() {
 			genFile(absPath, outdir)
 		}
 		if !stdlib {
-			makeJfile(stdbuf)
+			makePugFile(stdbuf)
 		}
 	}
 }

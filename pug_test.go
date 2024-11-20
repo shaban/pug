@@ -9,8 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/Joker/hpp"
 )
 
 var wdir string
@@ -40,7 +38,7 @@ func examination(test func(fpath string, dat []byte) (string, error), ext, path 
 		name = file.Name()
 		fext = filepath.Ext(name)
 
-		if fext != ".jade" && fext != ".pug" {
+		if fext != ".pug" {
 			continue
 		}
 
@@ -128,7 +126,7 @@ func lexerTest(fpath string, dat []byte) (string, error) {
 	return buf.String(), nil
 }
 
-func xTestJadeLex(t *testing.T) {
+func xTestpugLex(t *testing.T) {
 	examination(lexerTest, ".lex", wdir+"/testdata/v1/", t)
 	examination(lexerTest, ".lex", wdir+"/testdata/v2/", t)
 }
@@ -142,10 +140,10 @@ func parserTest(fpath string, text []byte) (string, error) {
 	}
 	b := new(bytes.Buffer)
 	outTpl.WriteIn(b)
-	return string(hpp.Print(b)), nil
+	return string(b.String()), nil
 }
 
-func TestJadeParse(t *testing.T) {
+func TestPugParse(t *testing.T) {
 	examination(parserTest, ".tpl", wdir+"/testdata/v1/", t)
 	examination(parserTest, ".tpl", wdir+"/testdata/v2/", t)
 	examination(parserTest, ".tpl", wdir+"/testdata/v2/includes/", t)

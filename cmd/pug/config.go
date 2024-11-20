@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"log"
 	"strings"
@@ -89,7 +90,7 @@ type layout struct {
 }
 
 func (data *layout) writeBefore(wr io.Writer) {
-	t := template.Must(template.New("file_bgn").Parse(file_bgn))
+	t := template.Must(template.New("file_bgn").Parse(fmt.Sprintf("%s\n%s", prepend, file_bgn)))
 	err := t.Execute(wr, data)
 	if err != nil {
 		log.Fatalln("executing template: ", err)
@@ -113,7 +114,6 @@ func newLayout(constName string) layout {
 		`"fmt"`,
 		`"html"`,
 		`"strconv"`,
-		`"github.com/Joker/hpp"`,
 		`pool "github.com/valyala/bytebufferpool"`,
 	}
 
@@ -140,12 +140,12 @@ func newLayout(constName string) layout {
 			tpl.After = `
 				w.Close()
 			}()
-			hpp.Format(r,wr)`
+			`
 		} else {
 			tpl.After = `
 				w.Close()
 			}()
-			hpp.Format(r,buffer)`
+			`
 		}
 	}
 

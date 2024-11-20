@@ -442,17 +442,17 @@ func (t *codeNode) WriteIn(b io.Writer) {
 	case itemCode:
 		fmt.Fprintf(b, code__longcode, filterString(string(t.Code)))
 	case itemElse:
-		fmt.Fprintf(b, code__else)
+		fmt.Fprint(b, code__else)
 	case itemElseIf:
 		fmt.Fprintf(b, code__else_if, filterString(string(t.Code)))
 	case itemForElse:
-		fmt.Fprintf(b, code__for_else)
+		fmt.Fprint(b, code__for_else)
 	case itemCaseWhen:
 		fmt.Fprintf(b, code__case_when, filterString(string(t.Code)))
 	case itemCaseDefault:
-		fmt.Fprintf(b, code__case_def)
+		fmt.Fprint(b, code__case_def)
 	case itemMixinBlock:
-		fmt.Fprintf(b, code__mix_block)
+		fmt.Fprint(b, code__mix_block)
 	default:
 		fmt.Fprintf(b, "{{ Error Code %s }}", t.Code)
 	}
@@ -564,7 +564,7 @@ type mixinNode struct {
 	AttrRest  []string
 	MixinName string
 	block     []node
-	tagType   itemType
+	//tagType   itemType
 }
 
 func (t *tree) newMixin(pos pos) *mixinNode {
@@ -600,7 +600,7 @@ func (l *mixinNode) WriteIn(b io.Writer) {
 	)
 
 	if an > 0 {
-		fmt.Fprintf(attr, mixin__var_bgn)
+		fmt.Fprint(attr, mixin__var_bgn)
 		if rest > 0 {
 			// TODO
 			// fmt.Println("-------- ", mixin__var_rest, l.AttrName[an-1], l.AttrRest)
@@ -610,7 +610,7 @@ func (l *mixinNode) WriteIn(b io.Writer) {
 		for k, name := range l.AttrName {
 			fmt.Fprintf(attr, mixin__var, name, filterString(l.AttrCode[k]))
 		}
-		fmt.Fprintf(attr, mixin__var_end)
+		fmt.Fprint(attr, mixin__var_end)
 	}
 	fmt.Fprintf(b, mixin__bgn, attr)
 
@@ -627,7 +627,7 @@ func (l *mixinNode) WriteIn(b io.Writer) {
 	for _, n := range l.Nodes {
 		n.WriteIn(b)
 	}
-	fmt.Fprintf(b, mixin__end)
+	fmt.Fprint(b, mixin__end)
 }
 
 func (l *mixinNode) CopyMixin() *mixinNode {
