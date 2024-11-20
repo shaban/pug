@@ -1,0 +1,4 @@
+- add a js/wasnm flag to specify if we are in a frontend environment
+- see how we handle //go: flags maybe parse them and set the js/wasm flags accordingly this way don't need an extra flag
+- if in a wasm/js environment add syscall/js calls to evacuate the scripts into a container element and then on rerender get rid of the scripts and rebuild them
+- reactivity see if i can streamline the event loop so that the end developer doesn't need to deal with channels themselves

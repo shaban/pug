@@ -31,4 +31,7 @@ Copyright (c) 2024, shaban
 This file describes modifications made to the original jade library.
 
 Modifications include:
-* ... (list your significant changes) ...
+* Adding a -preprend flag to the commandline
+* fixing deprecated functions
+* fixing minor oversights
+* changing all occurences of jade to pug
