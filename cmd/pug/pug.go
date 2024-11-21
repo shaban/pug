@@ -180,28 +180,28 @@ func WriteBool(b bool, buffer {{.Buf}}) {
 // This file contains essential utility functions and definitions
 // that are used by the Go code generated from the Pug templates.
 func makePugFile(std bool) {
-	wr, err := os.Create(outdir + "/pug.go")
+	wr, err := os.Create(flagVars.outdir + "/pug.go")
 	if err != nil {
 		log.Fatalln("cmd/pug: makePugFile(): ", err)
 	}
 	defer wr.Close()
-	tp := template.Must(template.New("playout").Parse(fmt.Sprintf("%s\n%s", prepend, pug_go)))
+	tp := template.Must(template.New("playout").Parse(fmt.Sprintf("%s\n%s", flagVars.prepend, pug_go)))
 
-	if writer {
+	if flagVars.writer {
 		err = tp.Execute(wr, struct {
 			Pkg string
 			Buf string
-		}{pkg_name, "*WriterAsBuffer"})
+		}{flagVars.pkg_name, "*WriterAsBuffer"})
 	} else if std {
 		err = tp.Execute(wr, struct {
 			Pkg string
 			Buf string
-		}{pkg_name, "*bytes.Buffer"})
+		}{flagVars.pkg_name, "*bytes.Buffer"})
 	} else {
 		err = tp.Execute(wr, struct {
 			Pkg string
 			Buf string
-		}{pkg_name, "*pool.ByteBuffer"})
+		}{flagVars.pkg_name, "*pool.ByteBuffer"})
 	}
 	if err != nil {
 		log.Fatalln("cmd/pug: makePugFile(): ", err)

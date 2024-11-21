@@ -63,7 +63,7 @@ func rewrite(in []ast.Stmt, info *types.Info) {
 
 					switch vt := info.TypeOf(v.Values[0]).(type) {
 					case *types.Basic:
-						if stdlib {
+						if flagVars.stdlib {
 							switch vt.Name() {
 							case "string":
 								in[k] = stdlibFuncCall(escape, "", "", arg(v.Values[0]))
@@ -107,7 +107,7 @@ func rewrite(in []ast.Stmt, info *types.Info) {
 							}
 						}
 					default:
-						if stdlib {
+						if flagVars.stdlib {
 							in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), v.Values[0]))
 						} else {
 							in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}

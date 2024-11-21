@@ -90,7 +90,7 @@ type layout struct {
 }
 
 func (data *layout) writeBefore(wr io.Writer) {
-	t := template.Must(template.New("file_bgn").Parse(fmt.Sprintf("%s\n%s", prepend, file_bgn)))
+	t := template.Must(template.New("file_bgn").Parse(fmt.Sprintf("%s\n%s", flagVars.prepend, file_bgn)))
 	err := t.Execute(wr, data)
 	if err != nil {
 		log.Fatalln("executing template: ", err)
@@ -106,7 +106,7 @@ func (data *layout) writeAfter(wr *bytes.Buffer) {
 
 func newLayout(constName string) layout {
 	var tpl layout
-	tpl.Package = pkg_name
+	tpl.Package = flagVars.pkg_name
 
 	tpl.Import = []string{
 		`"bytes"`,
@@ -117,14 +117,14 @@ func newLayout(constName string) layout {
 		`pool "github.com/valyala/bytebufferpool"`,
 	}
 
-	if !inline {
+	if !flagVars.inline {
 		tpl.Def = []string{"const ()"}
 	}
 
-	if writer {
+	if flagVars.writer {
 		tpl.Bbuf = "wr io.Writer"
 		tpl.Before = "buffer := &WriterAsBuffer{wr}"
-	} else if stdbuf {
+	} else if flagVars.stdbuf {
 		tpl.Bbuf = "buffer *bytes.Buffer"
 	} else {
 		tpl.Bbuf = "buffer *pool.ByteBuffer"

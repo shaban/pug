@@ -103,7 +103,7 @@ func astTest(fpath string, text []byte, fname string) ([]byte, error) {
 	pug.Config(golang)
 
 	outPath := "test"
-	inline = true
+	flagVars.inline = true
 
 	//
 
@@ -127,7 +127,7 @@ func astTest(fpath string, text []byte, fname string) ([]byte, error) {
 		return bb.Bytes(), nil
 	}
 
-	gst.collapseWriteString(inline, fname)
+	gst.collapseWriteString(flagVars.inline, fname)
 	gst.checkType()
 	gst.checkUnresolvedBlock()
 
