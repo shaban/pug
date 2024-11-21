@@ -157,6 +157,11 @@ func WriteBool(b bool, buffer {{.Buf}}) {
 `
 )
 
+// makePugFile focuses on:
+
+// Setting up the output directory.
+// Processing the input Pug files or directories provided as arguments.
+// Generating the pug.go file with helper functions for the templates.
 func makePugFile(std bool) {
 	wr, err := os.Create(outdir + "/pug.go")
 	if err != nil {

@@ -171,40 +171,50 @@ func genDir(dir, outdir string) {
 	}
 }
 
-//
-
 func main() {
-	flag.Usage = use
-	flag.Parse()
+	flag.Usage = use // Sets the usage message function
+	flag.Parse()     //Parses the command-line arguments
+	//Checks if any arguments are provided (exits if not).
 	if len(flag.Args()) == 0 {
 		use()
 		return
 	}
-
+	//configures the Pug template engine using the settings defined in the golang variable
 	pug.Config(golang)
-
+	// Checks if the output directory (outdir) exists; creates it if it doesn't.
 	if _, err := os.Stat(outdir); os.IsNotExist(err) {
+		// it creates it with the specified permissions
+		// (0755, which means read, write, and execute permissions for the owner,
+		// and read and execute permissions for group and others).
 		os.MkdirAll(outdir, 0755)
 	}
-	outdir, _ = filepath.Abs(outdir)
-
+	//This line gets the absolute path of the output directory.
+	//This is useful to ensure that all subsequent file operations use the full, unambiguous path.
+	outdir, _ = filepath.Abs(outdir) //Gets the absolute path of the output directory
+	//Changes the working directory to basedir if it's provided
 	if _, err := os.Stat(basedir); !os.IsNotExist(err) && basedir != "./" {
 		os.Chdir(basedir)
 	}
-
+	//Loops through each pugPath provided as a command-line argument
 	for _, pugPath := range flag.Args() {
-
+		//get the dile descriptor of pugpath for further inspection
 		stat, err := os.Stat(pugPath)
 		if err != nil {
 			log.Fatalln(err)
 		}
-
+		//get the absolute path of pugPath
 		absPath, _ := filepath.Abs(pugPath)
+		//Checks if the pugPath is a directory or a file
 		if stat.IsDir() {
+			//If it's a directory, calls genDir to process all .pug files in the directory
 			genDir(absPath, outdir)
 		} else {
+			//If it's a file, calls genFile to process the individual .pug file.
 			genFile(absPath, outdir)
 		}
+		// here the decision is made if we want a go template or a pug template
+		// at the moment i don't see anything that handles the case when stdlib is true
+		// maybe i overlooked something
 		if !stdlib {
 			makePugFile(stdbuf)
 		}

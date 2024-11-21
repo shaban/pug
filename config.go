@@ -52,7 +52,7 @@ var (
 	mixin__var_block_end = ""
 )
 
-type ReplaseTokens struct {
+type ReplaceTokens struct {
 	GolangMode bool
 	TagBgn     string
 	TagEnd     string
@@ -96,7 +96,25 @@ type ReplaseTokens struct {
 	MixinVarBlockEnd string
 }
 
-func Config(c ReplaseTokens) {
+// Config is responsible for configuring the behavior
+// of the Pug template engine.
+// It tells the engine how to generate Go code based on the Pug templates.
+
+// golang Variable: The golang variable is of type pug.ReplaceTokens.
+// It holds a set of replacement patterns and settings
+// that control the code generation process.
+
+// Key Settings in golang:
+// GolangMode: true: Indicates that the engine should generate Go code.
+// TagBgn, TagEnd, TagVoid, etc.: These define how HTML tags should be translated into Go code.
+// CondIf, CondUnless, CondCase, etc.: These define how conditional statements and loops should be translated.
+// CodeLongcode, CodeBuffered, CodeElse, etc.: These control the translation of Pug code blocks and expressions.
+// TextStr, TextComment: These handle the translation of text content and comments.
+// MixinBgn, MixinEnd, MixinVar, etc.: These define how mixins (reusable blocks of Pug code) should be handled.
+
+// In essence, pug.Config(golang) sets up the rules and patterns that
+// he Pug template engine will follow when it parses the .pug templates and generates the corresponding Go code.
+func Config(c ReplaceTokens) {
 	golang_mode = c.GolangMode
 	if c.TagBgn != "" {
 		tag__bgn = c.TagBgn

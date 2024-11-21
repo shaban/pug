@@ -35,7 +35,7 @@ import (
 `
 )
 
-var golang = pug.ReplaseTokens{
+var golang = pug.ReplaceTokens{
 	GolangMode: true,
 	TagBgn:     "\nbuffer.WriteString(`<%s%s>`)",
 	TagEnd:     "\nbuffer.WriteString(`</%s>`)",
