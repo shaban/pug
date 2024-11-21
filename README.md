@@ -3,7 +3,7 @@ Package pug (github.com/shaban/pug) is a simple and fast template engine impleme
 It is a fork of github.com/Joker/jade aiming to keep up with go releases and enable usage in wasm environments.
 Pug precompiles templates to Go code or generates html/template.   
 
-[![GoDoc](https://godoc.org/github.com/shaban/pug?status.svg)](https://pkg.go.dev/github.com/shaban/pug#section-documentation) [![Go Report Card](https://github.com/shaban/pug/actions/workflows/goreportcard.yml/badge.svg)](https://goreportcard.com/report/github.com/shaban/pug)
+[![GoDoc](https://godoc.org/github.com/shaban/pug?status.svg)](https://pkg.go.dev/github.com/shaban/pug#section-documentation) [![Go Report Card](https://github.com/shaban/pug/actions/workflows/goreportcard.yml/badge.svg)](https://goreportcard.com/report/github.com/shaban/pug) [![Go Report Card](https://goreportcard.com/badge/github.com/shaban/pug)](https://goreportcard.com/report/github.com/shaban/pug)
 
 ## pug syntax
 example:
