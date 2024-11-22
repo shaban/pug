@@ -100,22 +100,23 @@ type ReplaceTokens struct {
 // of the Pug template engine.
 // It tells the engine how to generate Go code based on the Pug templates.
 
-// golang Variable: The golang variable is of type pug.ReplaceTokens.
-// It holds a set of replacement patterns and settings
+// parameter c of type pug.ReplaceTokens
+// holds a set of replacement patterns and settings
 // that control the code generation process.
-
-// Key Settings in golang:
 // GolangMode: true: Indicates that the engine should generate Go code.
-// TagBgn, TagEnd, TagVoid, etc.: These define how HTML tags should be translated into Go code.
-// CondIf, CondUnless, CondCase, etc.: These define how conditional statements and loops should be translated.
-// CodeLongcode, CodeBuffered, CodeElse, etc.: These control the translation of Pug code blocks and expressions.
-// TextStr, TextComment: These handle the translation of text content and comments.
-// MixinBgn, MixinEnd, MixinVar, etc.: These define how mixins (reusable blocks of Pug code) should be handled.
-
 // In essence, pug.Config(golang) sets up the rules and patterns that
-// he Pug template engine will follow when it parses the .pug templates and generates the corresponding Go code.
+// the Pug template engine will follow when it parses the .pug templates and generates the corresponding Go code.
 func Config(c ReplaceTokens) {
 	golang_mode = c.GolangMode
+	configureTags(c)
+	configureConditions(c)
+	configureCode(c)
+	configureText(c)
+	configureMixins(c)
+}
+
+// configureTags defines how HTML tags should be translated into Go code
+func configureTags(c ReplaceTokens) {
 	if c.TagBgn != "" {
 		tag__bgn = c.TagBgn
 	}
@@ -125,24 +126,10 @@ func Config(c ReplaceTokens) {
 	if c.TagVoid != "" {
 		tag__void = c.TagVoid
 	}
-	if c.TagArgEsc != "" {
-		tag__arg_esc = c.TagArgEsc
-	}
-	if c.TagArgUne != "" {
-		tag__arg_une = c.TagArgUne
-	}
-	if c.TagArgStr != "" {
-		tag__arg_str = c.TagArgStr
-	}
-	if c.TagArgAdd != "" {
-		tag__arg_add = c.TagArgAdd
-	}
-	if c.TagArgBgn != "" {
-		tag__arg_bgn = c.TagArgBgn
-	}
-	if c.TagArgEnd != "" {
-		tag__arg_end = c.TagArgEnd
-	}
+}
+
+// configureConditions defines how conditional statements and loops should be translated.
+func configureConditions(c ReplaceTokens) {
 	if c.CondIf != "" {
 		cond__if = c.CondIf
 	}
@@ -152,21 +139,10 @@ func Config(c ReplaceTokens) {
 	if c.CondCase != "" {
 		cond__case = c.CondCase
 	}
-	if c.CondWhile != "" {
-		cond__while = c.CondWhile
-	}
-	if c.CondFor != "" {
-		cond__for = c.CondFor
-	}
-	if c.CondEnd != "" {
-		cond__end = c.CondEnd
-	}
-	if c.CondForIf != "" {
-		cond__for_if = c.CondForIf
-	}
-	if c.CodeForElse != "" {
-		code__for_else = c.CodeForElse
-	}
+}
+
+// configureCode controls the translation of Pug code blocks and expressions.
+func configureCode(c ReplaceTokens) {
 	if c.CodeLongcode != "" {
 		code__longcode = c.CodeLongcode
 	}
@@ -176,57 +152,27 @@ func Config(c ReplaceTokens) {
 	if c.CodeUnescaped != "" {
 		code__unescaped = c.CodeUnescaped
 	}
-	if c.CodeElse != "" {
-		code__else = c.CodeElse
-	}
-	if c.CodeElseIf != "" {
-		code__else_if = c.CodeElseIf
-	}
-	if c.CodeCaseWhen != "" {
-		code__case_when = c.CodeCaseWhen
-	}
-	if c.CodeCaseDef != "" {
-		code__case_def = c.CodeCaseDef
-	}
-	if c.CodeMixBlock != "" {
-		code__mix_block = c.CodeMixBlock
-	}
+}
+
+// configureText handles the translation of text content and comments.
+func configureText(c ReplaceTokens) {
 	if c.TextStr != "" {
 		text__str = c.TextStr
 	}
 	if c.TextComment != "" {
 		text__comment = c.TextComment
 	}
+}
+
+// configureMixins defines how mixins (reusable blocks of Pug code) should be handled.
+func configureMixins(c ReplaceTokens) {
 	if c.MixinBgn != "" {
 		mixin__bgn = c.MixinBgn
 	}
 	if c.MixinEnd != "" {
 		mixin__end = c.MixinEnd
 	}
-	if c.MixinVarBgn != "" {
-		mixin__var_bgn = c.MixinVarBgn
-	}
-	if c.MixinVar != "" {
-		mixin__var = c.MixinVar
-	}
-	if c.MixinVarRest != "" {
-		mixin__var_rest = c.MixinVarRest
-	}
-	if c.MixinVarEnd != "" {
-		mixin__var_end = c.MixinVarEnd
-	}
-	if c.MixinVarBlockBgn != "" {
-		mixin__var_block_bgn = c.MixinVarBlockBgn
-	}
-	if c.MixinVarBlock != "" {
-		mixin__var_block = c.MixinVarBlock
-	}
-	if c.MixinVarBlockEnd != "" {
-		mixin__var_block_end = c.MixinVarBlockEnd
-	}
 }
-
-//
 
 type goFilter struct {
 	Name, Args, Import string
