@@ -43,8 +43,6 @@ func (a *goAST) checkType() {
 	})
 }
 
-//
-
 func rewrite(in []ast.Stmt, info *types.Info) {
 	for k, ex := range in {
 		if d, ok := ex.(*ast.DeclStmt); ok {
@@ -61,61 +59,73 @@ func rewrite(in []ast.Stmt, info *types.Info) {
 						continue
 					}
 
-					switch vt := info.TypeOf(v.Values[0]).(type) {
-					case *types.Basic:
-						if flagVars.stdlib {
-							switch vt.Name() {
-							case "string":
-								in[k] = stdlibFuncCall(escape, "", "", arg(v.Values[0]))
-							case "int", "int8", "int16", "int32":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(funcCall("", "int64", arg(v.Values[0])), a("10")))
-							case "int64":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(v.Values[0], a("10")))
-							case "uint", "uint8", "uint16", "uint32":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(funcCall("", "uint64", arg(v.Values[0])), a("10")))
-							case "uint64":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(v.Values[0], a("10")))
-							case "bool":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatBool", arg(v.Values[0]))
-							case "float64":
-								in[k] = stdlibFuncCall(escape, "strconv", "FormatFloat", arg(v.Values[0], a("'f'"), &ast.UnaryExpr{Op: 13, X: a("1")}, a("64"))) // &ast.UnaryExpr{Op: 13, X: a("1")} =>= -1
-							default:
-								in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), v.Values[0]))
-							}
-						} else {
-							switch vt.Name() {
-							case "string":
-								if escape {
-									in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteEscString", arg(v.Values[0], a("buffer")))}
-								} else {
-									in[k] = &ast.ExprStmt{X: funcCall("buffer", "WriteString", arg(v.Values[0]))}
-								}
-							case "int", "int8", "int16", "int32":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteInt", arg(funcCall("", "int64", arg(v.Values[0])), a("buffer")))}
-							case "int64":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteInt", arg(v.Values[0], a("buffer")))}
-							case "uint", "uint8", "uint16", "uint32":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteUint", arg(funcCall("", "uint64", arg(v.Values[0])), a("buffer")))}
-							case "uint64":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteUint", arg(v.Values[0], a("buffer")))}
-							case "bool":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteBool", arg(v.Values[0], a("buffer")))}
-							case "float64":
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteFloat", arg(v.Values[0], a("buffer")))}
-							default:
-								in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}
-							}
-						}
-					default:
-						if flagVars.stdlib {
-							in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), v.Values[0]))
-						} else {
-							in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}
-						}
-					}
+					rewriteValueSpec(in, k, info, v, escape)
 				}
 			}
 		}
+	}
+}
+
+func rewriteValueSpec(in []ast.Stmt, k int, info *types.Info, v *ast.ValueSpec, escape bool) {
+	switch vt := info.TypeOf(v.Values[0]).(type) {
+	case *types.Basic:
+		if flagVars.stdlib {
+			rewriteStdlibBasicType(in, k, vt, v.Values[0], escape)
+		} else {
+			rewriteBasicType(in, k, vt, v.Values[0], escape)
+		}
+	default:
+		if flagVars.stdlib {
+			in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), v.Values[0]))
+		} else {
+			in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}
+		}
+	}
+}
+
+func rewriteStdlibBasicType(in []ast.Stmt, k int, vt *types.Basic, val ast.Expr, escape bool) {
+	switch vt.Name() {
+	case "string":
+		in[k] = stdlibFuncCall(escape, "", "", arg(val))
+	case "int", "int8", "int16", "int32":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(funcCall("", "int64", arg(val)), a("10")))
+	case "int64":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(val, a("10")))
+	case "uint", "uint8", "uint16", "uint32":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(funcCall("", "uint64", arg(val)), a("10")))
+	case "uint64":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(val, a("10")))
+	case "bool":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatBool", arg(val))
+	case "float64":
+		in[k] = stdlibFuncCall(escape, "strconv", "FormatFloat", arg(val, a("'f'"), &ast.UnaryExpr{Op: 13, X: a("1")}, a("64")))
+	default:
+		in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), val))
+	}
+}
+
+func rewriteBasicType(in []ast.Stmt, k int, vt *types.Basic, val ast.Expr, escape bool) {
+	switch vt.Name() {
+	case "string":
+		if escape {
+			in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteEscString", arg(val, a("buffer")))}
+		} else {
+			in[k] = &ast.ExprStmt{X: funcCall("buffer", "WriteString", arg(val))}
+		}
+	case "int", "int8", "int16", "int32":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteInt", arg(funcCall("", "int64", arg(val)), a("buffer")))}
+	case "int64":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteInt", arg(val, a("buffer")))}
+	case "uint", "uint8", "uint16", "uint32":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteUint", arg(funcCall("", "uint64", arg(val)), a("buffer")))}
+	case "uint64":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteUint", arg(val, a("buffer")))}
+	case "bool":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteBool", arg(val, a("buffer")))}
+	case "float64":
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteFloat", arg(val, a("buffer")))}
+	default:
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(val, a(strconv.FormatBool(escape)), a("buffer")))}
 	}
 }
 
