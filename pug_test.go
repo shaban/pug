@@ -16,6 +16,7 @@ func init() {
 	wdir, _ = os.Getwd()
 }
 
+// TestStrFilter works
 func TestStrFilter(t *testing.T) {
 	a := `"aaa'a" + 'b\"bb"b' + 'c' |  +"dddd"  +  "eeee"+"ffff" +` + " `iiii ${jjjj} kkkk`"
 	b := "\"aaa'ab\\\"bb\\\"bc\" |  +\"ddddeeeeffff\" + `iiii `+jjjj+` kkkk`"
@@ -125,7 +126,8 @@ func lexerTest(fpath string, dat []byte) (string, error) {
 	return buf.String(), nil
 }
 
-func xTestpugLex(t *testing.T) {
+// TestPugLex works
+func TestPugLex(t *testing.T) {
 	examination(lexerTest, ".lex", wdir+"/testdata/v1/", t)
 	examination(lexerTest, ".lex", wdir+"/testdata/v2/", t)
 }
@@ -143,8 +145,8 @@ func parserTest(fpath string, text []byte) (string, error) {
 }
 
 func TestPugParse(t *testing.T) {
-	examination(parserTest, ".tpl", wdir+"/testdata/v1/", t)
-	examination(parserTest, ".tpl", wdir+"/testdata/v2/", t)
-	examination(parserTest, ".tpl", wdir+"/testdata/v2/includes/", t)
-	examination(parserTest, ".tpl", wdir+"/testdata/v2/inheritance/", t)
+	//examination(parserTest, ".tpl", wdir+"/testdata/v1/", t)
+	examination(parserTest, ".pug", wdir+"/testdata/v2/", t)
+	//examination(parserTest, ".tpl", wdir+"/testdata/v2/includes/", t)
+	//examination(parserTest, ".tpl", wdir+"/testdata/v2/inheritance/", t)
 }

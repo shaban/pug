@@ -99,7 +99,6 @@ type ReplaceTokens struct {
 // Config is responsible for configuring the behavior
 // of the Pug template engine.
 // It tells the engine how to generate Go code based on the Pug templates.
-
 // parameter c of type pug.ReplaceTokens
 // holds a set of replacement patterns and settings
 // that control the code generation process.

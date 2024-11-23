@@ -18,7 +18,6 @@ var (
 		basedir  string
 		pkg_name string
 		prepend  string
-		stdlib   bool
 		stdbuf   bool
 		writer   bool
 		inline   bool
@@ -39,7 +38,6 @@ func init() {
 	flag.StringVar(&flagVars.prepend, "prepend", "", `prepend to generated files e.g for build tags`)
 	// flag.BoolVar(&format, "fmt", false, `HTML pretty print output for generated functions`)
 	flag.BoolVar(&flagVars.inline, "inline", false, `inline HTML in generated functions`)
-	flag.BoolVar(&flagVars.stdlib, "stdlib", false, `use stdlib functions`)
 	flag.BoolVar(&flagVars.stdbuf, "stdbuf", false, `use bytes.Buffer  [default bytebufferpool.ByteBuffer]`)
 	flag.BoolVar(&flagVars.writer, "writer", false, `use io.Writer for output`)
 }
@@ -90,10 +88,6 @@ func main() {
 				log.Fatalln(err)
 			}
 		}
-		// here the decision is made if we want a go template or a pug template
-		// at the moment i don't see anything that handles the case when stdlib is true
-		if !flagVars.stdlib {
-			makePugFile(flagVars.stdbuf)
-		}
+		makePugFile(flagVars.stdbuf)
 	}
 }

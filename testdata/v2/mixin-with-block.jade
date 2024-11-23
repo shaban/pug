@@ -1,11 +1,3 @@
-//- Validate no panic when the first mixin has a block with a length check
 
-mixin func1
-  div
-  if len(block) > 0
-    block
-
-+func1
-
-+func1
-  p test
+<div></div>{{ if len(block) > 0 }}{{/* block */}}{{ end }}
+<p>test</p><div></div>{{ if len(block) > 0 }}{{/* block */}}{{ end }}

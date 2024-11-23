@@ -36,16 +36,15 @@ import (
 )
 
 var golang = pug.ReplaceTokens{
-	GolangMode: true,
-	TagBgn:     "\nbuffer.WriteString(`<%s%s>`)",
-	TagEnd:     "\nbuffer.WriteString(`</%s>`)",
-	TagVoid:    "\nbuffer.WriteString(`<%s%s/>`)",
-	TagArgEsc:  " buffer.WriteString(` %s=\"`)\n var esc%d = %s\n buffer.WriteString(`\"`);",
-	TagArgUne:  " buffer.WriteString(` %s=\"`)\n var unesc%d = %s\n buffer.WriteString(`\"`);",
-	TagArgStr:  " buffer.WriteString(` %s=\"%s\"`);",
-	TagArgAdd:  `%s + " " + %s`,
-	TagArgBgn:  "`);",
-	TagArgEnd:  "buffer.WriteString(`",
+	TagBgn:    "\nbuffer.WriteString(`<%s%s>`)",
+	TagEnd:    "\nbuffer.WriteString(`</%s>`)",
+	TagVoid:   "\nbuffer.WriteString(`<%s%s/>`)",
+	TagArgEsc: " buffer.WriteString(` %s=\"`)\n var esc%d = %s\n buffer.WriteString(`\"`);",
+	TagArgUne: " buffer.WriteString(` %s=\"`)\n var unesc%d = %s\n buffer.WriteString(`\"`);",
+	TagArgStr: " buffer.WriteString(` %s=\"%s\"`);",
+	TagArgAdd: `%s + " " + %s`,
+	TagArgBgn: "`);",
+	TagArgEnd: "buffer.WriteString(`",
 
 	CondIf:     "\nif %s {",
 	CondUnless: "\nif !%s {",

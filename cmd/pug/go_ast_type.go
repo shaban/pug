@@ -35,8 +35,6 @@ func (a *goAST) checkType() {
 				rewrite(x.Body, &info)
 			case *ast.BlockStmt:
 				rewrite(x.List, &info)
-				// case *ast.CallExpr:
-				// return false
 			}
 		}
 		return true
@@ -69,38 +67,9 @@ func rewrite(in []ast.Stmt, info *types.Info) {
 func rewriteValueSpec(in []ast.Stmt, k int, info *types.Info, v *ast.ValueSpec, escape bool) {
 	switch vt := info.TypeOf(v.Values[0]).(type) {
 	case *types.Basic:
-		if flagVars.stdlib {
-			rewriteStdlibBasicType(in, k, vt, v.Values[0], escape)
-		} else {
-			rewriteBasicType(in, k, vt, v.Values[0], escape)
-		}
+		rewriteBasicType(in, k, vt, v.Values[0], escape)
 	default:
-		if flagVars.stdlib {
-			in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), v.Values[0]))
-		} else {
-			in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}
-		}
-	}
-}
-
-func rewriteStdlibBasicType(in []ast.Stmt, k int, vt *types.Basic, val ast.Expr, escape bool) {
-	switch vt.Name() {
-	case "string":
-		in[k] = stdlibFuncCall(escape, "", "", arg(val))
-	case "int", "int8", "int16", "int32":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(funcCall("", "int64", arg(val)), a("10")))
-	case "int64":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatInt", arg(val, a("10")))
-	case "uint", "uint8", "uint16", "uint32":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(funcCall("", "uint64", arg(val)), a("10")))
-	case "uint64":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatUint", arg(val, a("10")))
-	case "bool":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatBool", arg(val))
-	case "float64":
-		in[k] = stdlibFuncCall(escape, "strconv", "FormatFloat", arg(val, a("'f'"), &ast.UnaryExpr{Op: 13, X: a("1")}, a("64")))
-	default:
-		in[k] = stdlibFuncCall(escape, "fmt", "Sprintf", arg(a(`"%v"`), val))
+		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(v.Values[0], a(strconv.FormatBool(escape)), a("buffer")))}
 	}
 }
 
@@ -128,20 +97,6 @@ func rewriteBasicType(in []ast.Stmt, k int, vt *types.Basic, val ast.Expr, escap
 		in[k] = &ast.ExprStmt{X: funcCall(lib_name, "WriteAll", arg(val, a(strconv.FormatBool(escape)), a("buffer")))}
 	}
 }
-
-func stdlibFuncCall(esc bool, x, sel string, exps []ast.Expr) *ast.ExprStmt {
-	arg := exps
-	if sel != "" {
-		arg = []ast.Expr{funcCall(x, sel, exps)}
-	}
-	if esc {
-		return &ast.ExprStmt{X: funcCall("buffer", "WriteString", []ast.Expr{funcCall("html", "EscapeString", arg)})}
-	} else {
-		return &ast.ExprStmt{X: funcCall("buffer", "WriteString", arg)}
-	}
-}
-
-//
 
 func funcCall(packName, funcName string, exps []ast.Expr) *ast.CallExpr {
 	if packName == "" {

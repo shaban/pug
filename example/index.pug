@@ -1,7 +1,7 @@
-:go:func Index(pageTitle string, youAreUsingJade bool)
+:go:func Index(pageTitle string, youAreUsing bool)
 
 mixin for(golang)
-	#cmd Precompile jade templates to #{golang} code.
+	#cmd Precompile pug templates to #{golang} code.
 
 doctype html
 html(lang="en")
@@ -12,18 +12,18 @@ html(lang="en")
 				answer(40 + 2)
 			}
 	body
-		h1 Jade - template engine
+		h1 Pug - template engine
 			+for('Go')
 
 		#container.col
-			if youAreUsingJade
+			if youAreUsingPug
 				p You are amazing
 			else
 				p Get on it!
 			p.
-				Jade/Pug is a terse and simple
+				Pug is a terse and simple
 				templating language with
 				a #[strong focus] on performance 
 				and powerful features.
 		footer
-			include footer.jade
+			include footer.pug

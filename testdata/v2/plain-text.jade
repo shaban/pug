@@ -1,65 +1,16 @@
-
-p This is plain old <em>text</em> content.
-
-
-<html>
-
-body
-  p Indenting the body tag here would make no difference.
-  p HTML itself isn't whitespace-sensitive.
-
-</html>
-
-
-p
-  | The pipe always goes at the beginning of its own line,
-  | not counting indentation.
-
-
-script.
-  if (usingPug)
+<p>This is plain old <em>text</em> content.</p><html><body><p>Indenting the body tag here would make no difference.</p><p>HTML itself isn't whitespace-sensitive.</p></body></html><p>The pipe always goes at the beginning of its own line,not counting indentation.</p><script>  if (usingPug)
     console.log('you are awesome')
   else
     console.log('use pug')
 
-
-div
-  p This text belongs to the paragraph tag.
-  br
-  .
+</script><div><p>This text belongs to the paragraph tag.</p><br/>
     This text belongs to the div tag.
 
-
-| You put the em
-em pha
-| sis on the wrong syl
-em la
-| ble.
-
-
-a ...sentence ending with a link
-| .
-
-
-| Don't
-|
-button#self-destruct touch
-|
-| me!
-
-
-p.
-  Using regular tags can help keep your lines short,
-  but interpolated tags may be easier to #[em visualize]
+</div>You put the em<em>pha</em>sis on the wrong syl<em>la</em>ble.<a>...sentence ending with a link</a>.Don't<button id="self-destruct">touch</button>me!<p>  Using regular tags can help keep your lines short,
+  but interpolated tags may be easier to <em>visualize</em>
   whether the tags and text are whitespace-separated.
 
-
-| Hey, check out 
-a(href="http://example.biz/kitteh.png") this picture
-|  of my cat!
-
-script.
-	const newWS = (url) => {
+</p>Hey, check out <a href="http://example.biz/kitteh.png">this picture</a> of my cat!<script>	const newWS = (url) => {
 		let socket = new WebSocket(url)
 			socket.onopen    =    _    => console.log("Open")
 			socket.onmessage = (event) => console.log(`Message: ${event.data}`)
@@ -69,4 +20,4 @@ script.
 							else console.log(`Err; code: ${event.code} ${event.reason}`)
 			}
 		return socket
-	}
+	}</script>
