@@ -1,10 +1,3 @@
-# Licenses
-
-This project uses the following third-party libraries:
-
-* **github.com/Joker/hpp:** Licensed under the MIT License. See `LICENSE-hpp.md` for the full license text.
-* **github.com/Joker/jade (forked):** Licensed under the Apache License 2.0. See `LICENSE-jade.md` for the full license text.
-
 MIT License
 
 Copyright (c) 2024, **github.com/shaban**
@@ -25,4 +18,11 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.   
+SOFTWARE.
+
+# Licenses
+
+This project uses the following third-party libraries:
+
+* **github.com/Joker/hpp:** Licensed under the MIT License. See `LICENSE-hpp.md` for the full license text.
+* **github.com/Joker/jade (forked):** Licensed under the Apache License 2.0. See `LICENSE-jade.md` for the full license text.
