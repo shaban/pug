@@ -12,6 +12,8 @@ import (
 	"text/template"
 )
 
+// mainTemplate is a text template for generating a main file to execute
+// the generated template function in {testname}.pug.go
 const mainTemplate = `package main
 
 import (
@@ -33,24 +35,26 @@ func main() {
 
 func TestTemplateLanguage(t *testing.T) {
 	var (
-		enteredTest           = false
-		wd, _                 = os.Getwd()
-		pugFiles, resultFiles = readAllTemplateTestFileTuples()
-		tpl                   *template.Template
-		f                     *os.File
-		err                   error
-		cmd                   *exec.Cmd
-		cmdOut                bytes.Buffer
+		//enteredTest                       = false
+		wd, _                             = os.Getwd()
+		pugFiles, resultFiles, expectFail = readAllTemplateTestFileTuples()
+		tpl                               *template.Template
+		f                                 *os.File
+		err                               error
+		cmd                               *exec.Cmd
+		cmdOut                            = new(bytes.Buffer)
 	)
-	//t.Logf("Input: %+v\nOutput: %+v\n", pugFiles, resultFiles)
+	//for debugging the tests
+	/*t.Logf("Input: %+v\nOutput: %+v\n", pugFiles, resultFiles)
+	for key := range pugFiles {
+		t.Logf("Test: %s shouldFail: %t Result Length: %d\n", key, expectFail[key], len(resultFiles[key]))
+	}*/
 	for name := range pugFiles {
 		t.Run(name, func(t *testing.T) {
+			t.Log("Name: ", name)
 			path := pugFiles[name]
 			dir := filepath.Dir(path)
-			if !enteredTest {
-				os.Chdir(dir)
-				enteredTest = true
-			}
+			os.Chdir(dir)
 			tpl = template.New("main.tpl")
 			f, err = os.Create("main.go")
 			if err != nil {
@@ -71,24 +75,30 @@ func TestTemplateLanguage(t *testing.T) {
 				t.Fatalf("exec.Command: %s\nErr: %s", name, err.Error())
 			}
 			cmd = exec.Command("go", "run", ".")
-			cmd.Stdout = &cmdOut
+			cmdOut.Reset()
+			cmd.Stdout = cmdOut
 			cmd.Run()
 			os.Remove(name + ".pug.go")
 			os.Remove("pug.go")
 			os.Remove("main.go")
 			if resultFiles[name] != cmdOut.String() {
-				t.Errorf("HTML output mismatch\nExpected: %s\nGot: %s", resultFiles[name], cmdOut.String())
+				if expectFail[name] == false {
+					t.Errorf("Should Succeed but doesn't:\nHTML output mismatch\nExpected: %s\nGot: %s", resultFiles[name], cmdOut.String())
+				}
 			} else {
-				t.Logf("HTML output matched\nExpected: %s\nGot: %s", resultFiles[name], cmdOut.String())
+				if expectFail[name] == true {
+					t.Errorf("Should Fail, but doesn't:\nHTML output matched\nExpected: %s\nGot: %s", resultFiles[name], cmdOut.String())
+				}
 			}
 		})
 	}
 	os.Chdir(wd)
 }
-func readAllTemplateTestFileTuples() (map[string]string, map[string]string) {
+func readAllTemplateTestFileTuples() (map[string]string, map[string]string, map[string]bool) {
 	var (
 		testFiles   = make(map[string]string)
 		resultFiles = make(map[string]string)
+		expectFail  = make(map[string]bool)
 		err         error
 	)
 	// Get the absolute path of the current package
@@ -107,18 +117,16 @@ func readAllTemplateTestFileTuples() (map[string]string, map[string]string) {
 			return err
 		}
 		if !info.IsDir() {
-			filename := filepath.Base(path)
 			if strings.HasSuffix(path, ".pug") {
-				name := strings.TrimSuffix(filename, ".pug")
+				dir, fname := filepath.Split(path)
+				name := strings.TrimSuffix(fname, ".pug")
 				testFiles[name] = path
-			}
-			if strings.HasSuffix(path, ".html") {
-				name := strings.TrimSuffix(filename, ".html")
-				expectResult, err := os.ReadFile(path)
+				expectResult, err := os.ReadFile(filepath.Join(dir, name+".html"))
 				if err != nil {
 					return err
 				}
 				resultFiles[name] = string(expectResult)
+				expectFail[name] = filepath.Base(dir) == "fails"
 			}
 		}
 
@@ -127,5 +135,5 @@ func readAllTemplateTestFileTuples() (map[string]string, map[string]string) {
 	if err != nil {
 		panic(err)
 	}
-	return testFiles, resultFiles
+	return testFiles, resultFiles, expectFail
 }
